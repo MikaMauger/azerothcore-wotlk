@@ -898,7 +898,6 @@ void World::LoadConfigSettings(bool reload)
 
     _bool_configs[CONFIG_INSTANCE_IGNORE_LEVEL]    = sConfigMgr->GetOption<bool>("Instance.IgnoreLevel", false);
     _bool_configs[CONFIG_INSTANCE_IGNORE_RAID]     = sConfigMgr->GetOption<bool>("Instance.IgnoreRaid", false);
-    _bool_configs[CONFIG_INSTANCE_GMSUMMON_PLAYER] = sConfigMgr->GetOption<bool>("Instance.GMSummonPlayer", false);
     _bool_configs[CONFIG_INSTANCE_SHARED_ID]       = sConfigMgr->GetOption<bool>("Instance.SharedNormalHeroicId", false);
 
     _int_configs[CONFIG_INSTANCE_RESET_TIME_HOUR]               = sConfigMgr->GetOption<int32>("Instance.ResetTimeHour", 4);
