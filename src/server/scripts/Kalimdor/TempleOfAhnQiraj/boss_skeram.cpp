@@ -147,7 +147,10 @@ struct boss_skeram : public BossAI
         events.Reset();
 
         events.ScheduleEvent(EVENT_ARCANE_EXPLOSION, 6s, 12s);
-        events.ScheduleEvent(EVENT_FULLFILMENT, 15s);
+        if (!me->IsSummon())
+        {
+            events.ScheduleEvent(EVENT_FULLFILMENT, 15s);
+        }
         events.ScheduleEvent(EVENT_BLINK, 30s, 45s);
         events.ScheduleEvent(EVENT_EARTH_SHOCK, 1200ms);
 
@@ -173,8 +176,8 @@ struct boss_skeram : public BossAI
                     events.ScheduleEvent(EVENT_ARCANE_EXPLOSION, 8s, 18s);
                     break;
                 case EVENT_FULLFILMENT:
-                    DoCast(SelectTarget(SelectTargetMethod::MinDistance, 1, 0.0f, true), SPELL_TRUE_FULFILLMENT, false);
-                    events.ScheduleEvent(EVENT_FULLFILMENT, 20s, 30s);
+                    DoCast(SelectTarget(SelectTargetMethod::Random, 0, 0, true, false), SPELL_TRUE_FULFILLMENT, false);
+                    events.ScheduleEvent(EVENT_FULLFILMENT, 13s, 16s);
                     break;
                 case EVENT_BLINK:
                     DoCast(me, BlinkSpells[urand(0, 2)]);
