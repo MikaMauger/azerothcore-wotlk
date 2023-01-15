@@ -859,34 +859,11 @@ public:
             }
             else if (map->IsDungeon())
             {
-                // Allow GM to summon players or only other GM accounts inside instances.
-                if (!sWorld->getBoolConfig(CONFIG_INSTANCE_GMSUMMON_PLAYER))
-                {
-                    // pussywizard: prevent unbinding normal player's perm bind by just summoning him >_>
-                    if (!targetPlayer->GetSession()->GetSecurity())
-                    {
-                        handler->PSendSysMessage("Only GMs can be summoned to an instance!");
-                        handler->SetSentErrorMessage(true);
-                        return false;
-                    }
-                }
-
                 Map* destMap = targetPlayer->GetMap();
 
                 if (destMap->Instanceable() && destMap->GetInstanceId() != map->GetInstanceId())
                 {
                     sInstanceSaveMgr->PlayerUnbindInstance(target->GetGUID(), map->GetInstanceId(), targetPlayer->GetDungeonDifficulty(), true, targetPlayer);
-                }
-
-                // we are in an instance, and can only summon players in our group with us as leader
-                if (!handler->GetSession()->GetPlayer()->GetGroup() || !targetPlayer->GetGroup() ||
-                        (targetPlayer->GetGroup()->GetLeaderGUID() != handler->GetSession()->GetPlayer()->GetGUID()) ||
-                        (handler->GetSession()->GetPlayer()->GetGroup()->GetLeaderGUID() != handler->GetSession()->GetPlayer()->GetGUID()))
-                    // the last check is a bit excessive, but let it be, just in case
-                {
-                    handler->PSendSysMessage(LANG_CANNOT_SUMMON_TO_INST, nameLink.c_str());
-                    handler->SetSentErrorMessage(true);
-                    return false;
                 }
             }
 
@@ -970,17 +947,6 @@ public:
 
         Map* gmMap = handler->GetSession()->GetPlayer()->GetMap();
         bool toInstance = gmMap->Instanceable();
-
-        // we are in instance, and can summon only player in our group with us as lead
-        if (toInstance && (
-                    !handler->GetSession()->GetPlayer()->GetGroup() || (group->GetLeaderGUID() != handler->GetSession()->GetPlayer()->GetGUID()) ||
-                    (handler->GetSession()->GetPlayer()->GetGroup()->GetLeaderGUID() != handler->GetSession()->GetPlayer()->GetGUID())))
-            // the last check is a bit excessive, but let it be, just in case
-        {
-            handler->SendSysMessage(LANG_CANNOT_SUMMON_TO_INST);
-            handler->SetSentErrorMessage(true);
-            return false;
-        }
 
         for (GroupReference* itr = group->GetFirstMember(); itr != nullptr; itr = itr->next())
         {
