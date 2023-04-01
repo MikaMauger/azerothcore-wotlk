@@ -4828,6 +4828,17 @@ void Player::RepopAtGraveyard()
     if (!sScriptMgr->CanRepopAtGraveyard(this))
         return;
 
+    if (Map* m = GetMap()) {
+        if (m->IsNonRaidDungeon()) {
+            ResurrectPlayer(0.5f);
+            SpawnCorpseBones();
+            uint32 dungeonId = GetLFGDungeon(m->GetId(), m->GetDifficulty())->ID;
+            const lfg::LFGDungeonData* dungeon = sLFGMgr->GetLFGDungeon(dungeonId);
+            TeleportTo(m->GetId(), dungeon->x, dungeon->y, dungeon->z, dungeon->o);
+            return;
+        }
+    }
+
     // Such zones are considered unreachable as a ghost and the player must be automatically revived
     // Xinef: Get Transport Check is not needed
     if ((!IsAlive() && zone && zone->flags & AREA_FLAG_NEED_FLY) /*|| GetTransport()*/ || GetPositionZ() < GetMap()->GetMinHeight(GetPositionX(), GetPositionY()))
